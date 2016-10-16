@@ -3,10 +3,10 @@ package org.kedar.pra;
 
 /**
  * <p>
- * Models an immutable, non-negative, monotonically increasing tick of time. It could be modeled as a natural number, but
+ * Models an immutable, non-negative, monotonically increasing firstSubmissionStartTick of time. It could be modeled as a natural number, but
  * this abstraction could be useful to provide additional flexibility. This is a pure <i>value class</i>.
  * </p>
- * Created by kedar on 15/10/16.
+ * Created by kedar on 10/15/16.
  */
 public final class TimeTick implements Comparable<TimeTick> {
 
@@ -22,10 +22,28 @@ public final class TimeTick implements Comparable<TimeTick> {
         return value;
     }
 
+    public long minus(TimeTick that) {
+        return this.value - that.value;
+    }
+    public boolean happensBefore(TimeTick that) {
+        return this.compareTo(that) < 0;
+    }
+    public boolean isConcurrentWith(TimeTick that) {
+        return this == that || this.compareTo(that) == 0;
+    }
+    public boolean happensAfter(TimeTick that) {
+        return this.compareTo(that) > 0;
+    }
+
+    public boolean elapsedSinceTo(int n, TimeTick newer) {
+        // "this" was in the past, which means newer > this
+        return newer.value - this.value == n;
+    }
     @Override
     public int compareTo(TimeTick that) {
         return Long.compare(this.value, that.value);
     }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof TimeTick) {
